@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Jobs</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='jobs.css') }}">
+</head>
+<body>
+
+    <h1 class="page-title">Company Job Openings</h1>
+
+
+    <!-- If no companies after search -->
+    {% if companies|length == 0 %}
+        <p class="no-results">No companies found for "{{ search_query }}".</p>
+    {% endif %}
+
+    <div class="company-container">
+
+        {% for company in companies %}
+        <div class="company-card">
+            <div class="company-header">
+                <img src="{{ url_for('static', path='logos/' ~ company.logo) }}"
+                     alt="{{ company.name }} Logo"
+                     class="company-logo">
+                <h2 class="company-name">{{ company.name }}</h2>
+            </div>
+
+            <div class="job-list">
+                {% for job in company.jobs %}
+                <div class="job-card">
+                    <h3 class="job-title">{{ job.title }}</h3>
+                    <p class="job-salary">
+                        Salary: <span>{{ job.salary }}</span>
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+</body>
+</html>
