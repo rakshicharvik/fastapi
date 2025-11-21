@@ -8,6 +8,9 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from config import settings
 from db import get_db_session
+from models import JobBoard,JobPost
+
+
 
 engine = create_engine(str(settings.DATABASE_URL))
 with sessionmaker(bind=engine)() as session:
@@ -36,7 +39,7 @@ templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 @app.get("/health")
 async def health():
     try:
-        with get_db_session as session:
+        with get_db_session as s9ession:
             session.execute(text("SELECT 1"))
             print("All good!")
             return {"DB_STATUS":"OK"}
@@ -46,7 +49,31 @@ async def health():
 
 
 
+'''app.get("/api/job-boards/{job_board_id}/posts")
+async def api_job_boards (job_board_id: int):
+    with get_db_session() as session:
+       jobBoards = session.query(JobBoard).all()
+       posts = session.query(JobPost).filter(JobPost.job_board_id == job_board_id).all()
+       #posts = session.query(JobPost).all()
+       return posts'''
 
+@app.get("/api/job-boards/{job_board_id}/posts")
+async def api_company_job_board(job_board_id):
+  with get_db_session() as session:
+     Posts = session.query(JobPost).filter(JobPost.job_board_id.__eq__(job_board_id)).all()
+     return Posts
+
+@app.get("/api/job-boards/{slug}")
+async def api_company_job_board(slug):
+  with get_db_session() as session:
+     Posts = session.query(JobPost).join(JobPost.job_board).filter(JobBoard.slug.__eq__(slug)).all()
+     return  Posts
+    
+
+
+    
+ 
+    
 @app.get("/health")
 async def health():
   with sessionmaker(bind=engine)() as session:
@@ -131,6 +158,7 @@ COMPANIES = [
         ],
     },
 ]
+
 
 
 @app.get("/api", response_class=HTMLResponse)
