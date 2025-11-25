@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+jinja2
+python-dotenv
+sqlalchemy==2.0.44
+psycopg2-binary==2.9.11
+pydantic==2.12.4
+pydantic-settings==2.12.0
+alembic==1.17.2
+supabase==2.24.0
